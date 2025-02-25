@@ -1,7 +1,7 @@
 export const nationalities = [
   "Citizens of the Philippines",
   "Resident Alien",
-  "Individiual",
+  "Individual",
   "Non-Resident Alien",
   "Engaged in Business",
   "Domestic Corporation",

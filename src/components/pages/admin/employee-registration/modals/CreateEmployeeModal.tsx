@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from 'react-hot-toast';
-import CustomToast from "../../../../Toast/CustomToast"
+import CustomToast from "@/components/Toast/CustomToast";
 import { useQueryClient } from "@tanstack/react-query";
 import useAddEmployee from "../hooks/useAddEmployee";
-import { Employee } from '../../../../types';
+import { Employee } from '@/components/types';
 import { initialEmployeeProfileValues } from "../helpers/utils";
 import EmployeeInfo from "./subcomponents/EmployeeInfo";
 import ContactInfo from "./subcomponents/ContactInfo"
@@ -37,9 +37,12 @@ const CreateEmployeeModal: FC<ModalProps> = ({ isOpen, onClose }) => {
   };
 
   const onSubmit: SubmitHandler<Employee> = (values) => {
+    console.log('Form data:', values);
+
     const filteredData = Object.fromEntries(
       Object.entries(values).filter(([_, value]) => value !== null)
     );
+    
     
     mutate(filteredData, {
       onSuccess: (data: any) => {
@@ -127,9 +130,9 @@ const CreateEmployeeModal: FC<ModalProps> = ({ isOpen, onClose }) => {
                             <button
                               disabled={isPending || !isValid}
                               type="submit"
-                              className={`inline-flex px-2 justify-center w-full rounded-md border border-transparent py-2 
-                                ${isPending || !isValid ? 'font-bold text-white bg-gray-400 cursor-not-allowed' : 'bg-[#355FD0] text-base leading-6 font-bold text-white hover:bg-blue-500'} 
-                                shadow-sm focus:outline-none focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5`}
+                              className={`upload-csv-btn ${
+                                isPending || !isValid ? 'bg-gray-400 cursor-not-allowed' : ''
+                              }`}
                             >
                               {isPending ? "Submitting..." : !isValid ? "Invalid fields" : "Save"}
                             </button>

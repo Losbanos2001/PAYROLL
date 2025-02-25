@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { Control } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
+import { Employee } from '@/components/types';
 import { nationalities } from '../../helpers/constants';
-import { Employee } from '../../../../../types';
 
 interface EmployeeInfoProps {
-  control: Control<Employee>; 
+  control: Control<Employee>;
   errors: any;
 }
 

@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import { EmployeeContext, EmployeeRegistrationContext } from "../../../contexts";
-import { Employee, ISendStateEmployee } from "../../../types"; 
+import { EmployeeContext, EmployeeRegistrationContext } from "@/components/contexts";
+import { Employee, ISendStateEmployee } from "@/components/types"; 
 import { useQuery } from '@tanstack/react-query';
 import { getProfiles } from "./helpers/api";
+import { dummyEmployeeData } from './helpers/dummyData';
 
 export default function EmployeeWrapper({ children, }: { children: React.ReactNode; }) {
   const [currentEmployees, setCurrentEmployees] = useState<Employee[]>([]);
@@ -29,14 +30,11 @@ export default function EmployeeWrapper({ children, }: { children: React.ReactNo
   const [resetPassByID, setResetPassByID] = useState<any[]>([]);
   const [resetSignInByID, setResetSignInByID] = useState<any[]>([]);
 
-  const { data: employees } = useQuery({
+  const { data: employees = dummyEmployeeData } = useQuery({
     queryKey: ['employees'],
-    queryFn: getProfiles
+    queryFn: getProfiles,
+    initialData: dummyEmployeeData
   });
-
-  /* useEffect(() => {
-    console.log(employees)
-  }, [employees]) */
 
   useEffect(() => {
     let filteredEmployees = employees;

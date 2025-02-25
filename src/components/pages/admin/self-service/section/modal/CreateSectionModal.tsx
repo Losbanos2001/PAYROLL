@@ -22,10 +22,8 @@ const CreateSectionModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   });
 
   const onSubmit = (data: { name: string }) => {
-    console.log("Submitting section form with data:", data);
     mutate(data, {
       onSuccess: (response: any) => {
-        console.log("Section created successfully:", response);
         toast.custom(
           () => <CustomToast message={response.message} type="success" />,
           { duration: 4000 }
@@ -35,7 +33,6 @@ const CreateSectionModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         refetch();
       },
       onError: (error: any) => {
-        console.error("Error creating section:", error);
         toast.custom(
           () => <CustomToast message={error.message} type="error" />,
           { duration: 4000 }
@@ -48,15 +45,15 @@ const CreateSectionModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     <>
       {isOpen && (
         <div className={`block absolute z-10 ${modalClassName}`}>
-          <div className="overflow-y-auto fixed inset-0 z-20">
-            <div className="flex justify-center items-center px-4 pt-2 pb-20 min-h-screen text-center sm:block sm:p-0">
+          <div className="fixed inset-0 z-20 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen px-4 pt-2 pb-20 text-center sm:block sm:p-0">
               <div className="fixed inset-0 transition-opacity">
                 <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
               </div>
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
               <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:pb-6 w-[416px]">
                 <div className="text-center sm:text-left">
-                  <div className="flex justify-between p-2 w-full bg-blue-600">
+                  <div className="flex justify-between w-full p-2 bg-blue-600">
                     <h3 className="pr-2 text-lg font-medium leading-6 text-white truncate">
                       Create Section
                     </h3>
@@ -100,7 +97,7 @@ const CreateSectionModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                         {isPending ? 'Saving...' : 'Save'}
                       </button>
                     </span>
-                    <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                    <span className="flex w-full mt-3 rounded-md shadow-sm sm:mt-0 sm:w-auto">
                       <button type="button"
                         className="cancel-upload-csv-btn"
                         onClick={onClose}

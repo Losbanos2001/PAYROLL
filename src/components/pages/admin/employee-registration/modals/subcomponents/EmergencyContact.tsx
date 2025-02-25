@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Control } from 'react-hook-form';
 import { contactRelationship } from '../../helpers/constants';
-import { Employee } from '../../../../../types';
+import { Employee } from '@/components/types';
 
 interface EmergencyContactProps {
   control: Control<Employee>; 

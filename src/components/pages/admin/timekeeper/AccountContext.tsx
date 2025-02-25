@@ -3,6 +3,7 @@ import { AccountContext, TimekeeperContext } from "../../../contexts";
 import { TimekeeperAccount, ISendStateTimekeeper } from "../../../types";
 import { useQueries } from '@tanstack/react-query';
 import { get1to1Accs, get1toManyAccs } from "./helpers/api";
+import { dummyTimekeeperData } from './helpers/dummyData';
 
 export default function AccountWrapper({ children, }: { children: React.ReactNode; }) {
   const [currentAccounts, setCurrentAccounts] = useState<TimekeeperAccount[]>([]);
@@ -32,13 +33,19 @@ export default function AccountWrapper({ children, }: { children: React.ReactNod
 
   const results = useQueries({
     queries: [
-      { queryKey: ['1toM'], queryFn: () => get1toManyAccs(), 
+      { 
+        queryKey: ['1toM'], 
+        queryFn: () => get1toManyAccs(), 
         enabled: step === 2 || step === 3,
-        retry: 1 
+        retry: 1,
+        initialData: dummyTimekeeperData
       },
-      { queryKey: ['1to1'], queryFn: () => get1to1Accs(), 
+      { 
+        queryKey: ['1to1'], 
+        queryFn: () => get1to1Accs(), 
         enabled: step === 2 || step === 3,
-        retry: 1 
+        retry: 1,
+        initialData: dummyTimekeeperData
       },
     ],
     combine: (results) => {
@@ -96,6 +103,10 @@ export default function AccountWrapper({ children, }: { children: React.ReactNod
       return () => clearTimeout(timer);
     }
   }, [sentEmailsByID]);
+
+  useEffect(() => {
+    console.log('Selected Account:', selectedAccount);
+  }, [selectedAccount]);
 
   return (
     <AccountContext.Provider

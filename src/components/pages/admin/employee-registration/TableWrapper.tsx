@@ -89,22 +89,27 @@ export default function TableWrapper() {
       <UpdateEmployeeProfileModal isOpen={updateEmployeeProfile} onClose={handleUpdateProfileClose} />
       <UpdateJobInfoModal isOpen={updateJobInfo} onClose={handleUpdateJobInfoClose} />
       <DeleteModal isOpen={removeModalState} onClose={handleRemoveClose} />
-      <div className="overflow-y-auto max-h-96">
-        <table className="w-full table-auto">
-          <thead className="sticky top-0 z-10 text-sm border-b-2">
-            <tr className="bg-[#F9F9F9]">
-              <THeaders setRemoveModalState={setRemoveModalState} />
-            </tr>
-          </thead>
-          <tbody>
-            <TRows
-              setUpdateEmployeeProfile={setUpdateEmployeeProfile} setUpdateJobInfo={setUpdateJobInfo}
-              setRemoveModalState={setRemoveModalState}
-              completeEmployees={completeEmployees as any[]}
-            />
-          </tbody>
-        </table>
+      
+      <div className="relative">
+        <div className="overflow-y-auto max-h-48">
+          <table className="w-full table-auto">
+            <thead className="sticky top-[-1px] z-10 text-sm whitespace-nowrap">
+              <tr className="bg-white border-b-2">
+                <THeaders setRemoveModalState={setRemoveModalState} />
+              </tr>
+            </thead>
+            <tbody>
+              <TRows
+                setUpdateEmployeeProfile={setUpdateEmployeeProfile}
+                setUpdateJobInfo={setUpdateJobInfo}
+                setRemoveModalState={setRemoveModalState}
+                completeEmployees={completeEmployees as any[]}
+              />
+            </tbody>
+          </table>
+        </div>
       </div>
+      
       <TFooter />
     </>
   );

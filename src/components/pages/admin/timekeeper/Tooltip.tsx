@@ -11,7 +11,7 @@ interface FormTooltipProps {
 export const SendEmailTooltip = () => {
 	return (
 		<>
-			<span className="absolute z-10 w-48 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-24 -right-9">
+			<span className="absolute z-10 w-48 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-16 -right-9">
 				<p className="text-xs font-normal text-left">
 					Click this to send credentials via email to user.
 				</p>
@@ -37,7 +37,7 @@ export const ResendEmailTooltip = () => {
 export const ResetPassTooltip = () => {
 	return (
 		<>
-			<span className="absolute z-10 w-32 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-24 -right-3.5">
+			<span className="absolute z-10 w-32 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-[70px] -right-3.5">
 				<p className="text-xs font-normal text-left">
 					Click this button to reset password.
 				</p>
@@ -50,7 +50,7 @@ export const ResetPassTooltip = () => {
 export const DeleteTooltip = () => {
 	return (
 		<>
-			<span className="absolute z-10 w-36 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-20 -right-4">
+			<span className="absolute z-10 w-36 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-16 -right-4">
 				<p className="text-xs font-normal text-left">
 					Click this button to delete.
 				</p>
@@ -63,7 +63,7 @@ export const DeleteTooltip = () => {
 export const EditTooltip = () => {
 	return (
 		<>
-			<span className="absolute z-10 w-36 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-20 -right-12">
+			<span className="absolute z-10 w-36 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -top-[60px] -right-12">
 				<p className="text-xs font-normal text-left">
 					Click this button to edit.
 				</p>

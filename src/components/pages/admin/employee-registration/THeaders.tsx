@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { EmployeeContext, EmployeeRegistrationContext } from "../../../contexts";
+import { EmployeeContext, EmployeeRegistrationContext } from "@/components/contexts";
 import { Employee } from "../../../types";
 import { MdUnfoldMore } from "react-icons/md";
 
@@ -23,7 +23,7 @@ const RegistrationLinkHeader = ({ step, currentEmployees, selectedRows }: regist
 
   const handleBulkSend = () => {
     if (!selectedEmployees.every(employee => sentEmailsByID.includes(employee.id))) {
-      return alert('All selected employees have already been sent an email.'); // temp
+      return alert('All selected employees have already been sent an email.'); 
     }
     else {
       setSendState((prevState) => ({
@@ -39,7 +39,7 @@ const RegistrationLinkHeader = ({ step, currentEmployees, selectedRows }: regist
 
   const handleBulkResend = () => {
     if (!selectedEmployees.some(employee => sentEmailsByID.includes(employee.id))) {
-      return alert('None of the selected employees have been sent an email yet.'); // temp
+      return alert('None of the selected employees have been sent an email yet.'); 
     }
     else {
       setSendState((prevState) => ({
@@ -52,10 +52,6 @@ const RegistrationLinkHeader = ({ step, currentEmployees, selectedRows }: regist
       }));
     }
   }
-
-  // useEffect(() => {
-  //   console.log(selectedEmployees)
-  // },[selectedEmployees])
 
   return (
     <th className="th-outer">
@@ -174,20 +170,20 @@ export default function THeaders({ setRemoveModalState }: THProps) {
         currentEmployees={currentEmployees}
       />
       {selectedRows.length > 1 ? (
-        <th className="relative th-outer group">
+        <th className="relative break-normal th-outer group">
           <select onChange={handleSelectChange} className="bg-gray-50 border border-1 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" name="dropdown-actions">
             <option value="">Select Action:</option>
-            <option value="1">Reset Sign In Attempts</option>
-            <option value="2">Reset Password</option>
+            {/* <option value="1">Reset Sign In Attempts</option>
+            <option value="2">Reset Password</option> */}
             <option value="3">Delete</option>
           </select>
-          <span className="absolute z-40 w-fit top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex">
+          <span className="absolute z-10 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -left-48">
             <p className="text-xs font-normal text-left">
               Click this drop-down button to{" "}
-              <span className="italic underline">reset sign in attempts/</span> <span className="italic underline">reset password/</span> <span className="italic underline">delete</span> {" "}
+              <span className="italic underline">delete</span> {" "} 
               the selected employees.
             </p>
-            <div className="absolute w-3 h-3 bg-[#344960] transform rotate-45 -top-1"></div>
+            <div className="absolute w-3 h-3 bg-[#344960] transform rotate-45 -top-1 left-72"></div>
           </span>
         </th>
       ) : (

@@ -11,6 +11,7 @@ import useGetDepartmentData from "./hooks/Department/useGetDepatmentData";
 import useGetPositionData from "./hooks/Position/useGetPositionData";
 import useGetEmploymentTypeData from "./hooks/EmploymentType/useGetEmploymentTypeData";
 import classNames from "@/helpers/classNames";
+import { MdDownload, MdUpload } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { RiPencilFill } from "react-icons/ri";
 
@@ -318,21 +319,10 @@ export default function Location() {
                 <button
                   id="downloadbtn"
                   onClick={handleDownload}
-                  className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-bold py-2 px-6 rounded-lg inline-flex items-center"
+                  className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-semibold py-2 px-6 rounded-lg inline-flex items-center"
                 >
-                  <svg
-                    width="15"
-                    height="17"
-                    viewBox="0 0 15 17"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M14.7063 6H10.5045V0H4.2018V6H0L7.35314 13L14.7063 6ZM0 15V17H14.7063V15H0Z"
-                      fill="#2757ED"
-                    />
-                  </svg>
-                  <span className="ml-2">Download Template</span>
+                  <MdDownload className="w-6 h-6 mr-2.5" />
+                  Download Template
                 </button>
                 <span className="absolute z-40 w-fit top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex">
                   <span>
@@ -357,22 +347,11 @@ export default function Location() {
               <div className="flex relative group sm:mb-2">
                 <button
                   id="uploadbtn"
-                  className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-bold py-2 px-6 rounded-lg inline-flex items-center"
+                  className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-semibold py-2 px-6 rounded-lg inline-flex items-center"
                   onClick={openUpload}
                 >
-                  <svg
-                    width="15"
-                    height="18"
-                    viewBox="0 0 15 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.34171 13.5157H10.4205V7.51569H14.473L7.3811 0.51569L0.289185 7.51569H4.34171V13.5157ZM0.289185 15.5157H14.473V17.5157H0.289185V15.5157Z"
-                      fill="#2757ED"
-                    />
-                  </svg>
-                  <span className="ml-2">Upload File</span>
+                  <MdUpload className="w-6 h-6 mr-2.5" />
+                  Upload File
                 </button>
                 <span className="absolute z-40 w-[200px] top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex">
                   <span>
@@ -475,7 +454,7 @@ export default function Location() {
                       </tr>
                     ) : sortedLocationData?.length === 0 ? (
                       <tr>
-                        <td colSpan={3} className="text-center py-4">No data available.</td>
+                        <td colSpan={3} className="py-4 text-center">No data available.</td>
                       </tr>
                     ) : (
                       <>
@@ -483,10 +462,10 @@ export default function Location() {
                           (location: any, rowIndex: number) => (
                             <tr
                               key={location.id}
-                              className="h-12 p-4 border-b border-blue-gray-50 text-center"
+                              className="p-4 h-12 text-center border-b border-blue-gray-50"
                             >
                               <td className="py-1 cursor-pointer" onClick={() => handleCellClick(location.id)}>
-                                <span className="inline-block py-1 px-6 rounded-md hover:bg-gray-200">
+                                <span className="inline-block px-6 py-1 rounded-md hover:bg-gray-200">
                                   {location.name}
                                 </span>
                               </td>
@@ -496,14 +475,14 @@ export default function Location() {
                                   <button
                                     id="editbtn"
                                     onClick={openEditModal}
-                                    className="py-2 text-gray-500 hover:text-blue-500 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-gray-500 bg-white hover:text-blue-500 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                     <RiPencilFill size={17} />
                                   </button>
                                   <button
                                     id="deletebtn"
                                     onClick={openDeleteModal}
-                                    className="py-2 text-red-500 hover:text-red-700 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-red-500 bg-white hover:text-red-700 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                      <FaTrash size={17} />
                                   </button>
@@ -519,7 +498,7 @@ export default function Location() {
                         }).map((_, index) => (
                           <tr
                             key={`empty-${index}`}
-                            className="h-12 border-b border-blue-gray-50 text-center"
+                            className="h-12 text-center border-b border-blue-gray-50"
                           >
                             <td className="py-1"></td>
                           </tr>
@@ -561,7 +540,7 @@ export default function Location() {
                       </tr>
                     ) : sortedDepartmentData?.length === 0 ? (
                       <tr>
-                        <td colSpan={3} className="text-center py-4">No data available.</td>
+                        <td colSpan={3} className="py-4 text-center">No data available.</td>
                       </tr>
                     ) : (
                       <>
@@ -569,10 +548,10 @@ export default function Location() {
                           (department: any, rowIndex: number) => (
                             <tr
                               key={department.id}
-                              className="h-12 p-4 border-b border-blue-gray-50 text-center"
+                              className="p-4 h-12 text-center border-b border-blue-gray-50"
                             >
                               <td className="py-1 cursor-pointer" onClick={() => handleCellClick(department.id)}>
-                                <span className="inline-block py-1 px-6 rounded-md hover:bg-gray-200">
+                                <span className="inline-block px-6 py-1 rounded-md hover:bg-gray-200">
                                   {department.name}
                                 </span>
                               </td>
@@ -582,14 +561,14 @@ export default function Location() {
                                   <button
                                     id="editbtn"
                                     onClick={openEditModal}
-                                    className="py-2 text-gray-500 hover:text-blue-500 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-gray-500 bg-white hover:text-blue-500 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                     <RiPencilFill size={17} />
                                   </button>
                                   <button
                                     id="deletebtn"
                                     onClick={openDeleteModal}
-                                    className="py-2 text-red-500 hover:text-red-700 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-red-500 bg-white hover:text-red-700 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                      <FaTrash size={17} />
                                   </button>
@@ -605,7 +584,7 @@ export default function Location() {
                         }).map((_, index) => (
                           <tr
                             key={`empty-${index}`}
-                            className="h-12 border-b border-blue-gray-50 text-center"
+                            className="h-12 text-center border-b border-blue-gray-50"
                           >
                             <td className="py-1"></td>
                           </tr>
@@ -647,7 +626,7 @@ export default function Location() {
                       </tr>
                     ) : sortedPositionData?.length === 0 ? (
                       <tr>
-                        <td colSpan={3} className="text-center py-4">No data available.</td>
+                        <td colSpan={3} className="py-4 text-center">No data available.</td>
                       </tr>
                     ) : (
                       <>
@@ -655,10 +634,10 @@ export default function Location() {
                           (position: any, rowIndex: number) => (
                             <tr
                               key={position.id}
-                              className="h-12 p-4 border-b border-blue-gray-50 text-center"
+                              className="p-4 h-12 text-center border-b border-blue-gray-50"
                             >
                               <td className="py-1 cursor-pointer" onClick={() => handleCellClick(position.id)}>
-                                <span className="inline-block py-1 px-6 rounded-md hover:bg-gray-200">
+                                <span className="inline-block px-6 py-1 rounded-md hover:bg-gray-200">
                                   {position.name}
                                 </span>
                               </td>
@@ -668,14 +647,14 @@ export default function Location() {
                                   <button
                                     id="editbtn"
                                     onClick={openEditModal}
-                                    className="py-2 text-gray-500 hover:text-blue-500 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-gray-500 bg-white hover:text-blue-500 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                     <RiPencilFill size={17} />
                                   </button>
                                   <button
                                     id="deletebtn"
                                     onClick={openDeleteModal}
-                                    className="py-2 text-red-500 hover:text-red-700 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-red-500 bg-white hover:text-red-700 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                      <FaTrash size={17} />
                                   </button>
@@ -691,7 +670,7 @@ export default function Location() {
                         }).map((_, index) => (
                           <tr
                             key={`empty-${index}`}
-                            className="h-12 border-b border-blue-gray-50 text-center"
+                            className="h-12 text-center border-b border-blue-gray-50"
                           >
                             <td className="py-1"></td>
                           </tr>
@@ -733,7 +712,7 @@ export default function Location() {
                       </tr>
                     ) : sortedEmployementTypeData?.length === 0 ? (
                       <tr>
-                        <td colSpan={3} className="text-center py-4">No data available.</td>
+                        <td colSpan={3} className="py-4 text-center">No data available.</td>
                       </tr>
                     ) : (
                       <>
@@ -741,10 +720,10 @@ export default function Location() {
                           (employmenttype: any, rowIndex: number) => (
                             <tr
                               key={employmenttype.id}
-                              className="h-12 p-4 border-b border-blue-gray-50 text-center"
+                              className="p-4 h-12 text-center border-b border-blue-gray-50"
                             >
                               <td className="py-1 cursor-pointer" onClick={() => handleCellClick(employmenttype.id)}>
-                                <span className="inline-block py-1 px-6 rounded-md hover:bg-gray-200">
+                                <span className="inline-block px-6 py-1 rounded-md hover:bg-gray-200">
                                   {employmenttype.name}
                                 </span>
                               </td>
@@ -754,14 +733,14 @@ export default function Location() {
                                   <button
                                     id="editbtn"
                                     onClick={openEditModal}
-                                    className="py-2 text-gray-500 hover:text-blue-500 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-gray-500 bg-white hover:text-blue-500 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                     <RiPencilFill size={17} />
                                   </button>
                                   <button
                                     id="deletebtn"
                                     onClick={openDeleteModal}
-                                    className="py-2 text-red-500 hover:text-red-700 bg-white disabled:bg-gray-300 disabled:text-gray-500"
+                                    className="py-2 text-red-500 bg-white hover:text-red-700 disabled:bg-gray-300 disabled:text-gray-500"
                                   >
                                      <FaTrash size={17} />
                                   </button>
@@ -778,7 +757,7 @@ export default function Location() {
                         }).map((_, index) => (
                           <tr
                             key={`empty-${index}`}
-                            className="h-12 border-b border-blue-gray-50 text-center"
+                            className="h-12 text-center border-b border-blue-gray-50"
                           >
                             <td className="py-1"></td>
                           </tr>

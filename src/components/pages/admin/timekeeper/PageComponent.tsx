@@ -25,8 +25,8 @@ export default function PageComponent() {
 
 	return (
 		<>
-			<div className="flex flex-col content-center justify-center bg-fixed bg-center bg-no-repeat bg-cover bg-origin-content" style={{ height: '75vh', alignItems: 'center', backgroundImage: `url(${optimizedBgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-			    <div className='w-full max-w-5xl px-8 py-3'>
+			<div className="flex flex-col justify-center content-center bg-fixed bg-origin-content bg-center bg-no-repeat bg-cover" style={{ height: '75vh', alignItems: 'center', backgroundImage: `url(${optimizedBgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+			    <div className='px-8 py-3 w-full max-w-7xl'>
 				  {renderStepComponent()}
 				</div>
 			</div>

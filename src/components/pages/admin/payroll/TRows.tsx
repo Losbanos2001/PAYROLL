@@ -1,10 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { MdEdit, MdDelete } from "react-icons/md";
-import { DailyLogsContext, LogsContext } from "../../../contexts";
+import { DailyLogsContext, LogsContext } from "@/components/contexts";
 import { DeleteTooltip, EditTooltip } from '../timekeeper/Tooltip';
-import DeleteModal from "./modals/DeleteModal";
-import EditFormModal from "./modals/EditForm";
 
 interface RowProps {
   setEditFormState: React.Dispatch<React.SetStateAction<boolean>>;
@@ -81,15 +78,7 @@ const LoadingComponent = () => {
 
   return (
     <>
-      <EditFormModal
-        isOpen={isUpdateModalOpen}
-        onClose={closeUpdateModal}
-      />
-      <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={closeDeleteModal}
-      />
-      {/* <tr className="p-4 text-center border-b border-blue-gray-50">
+      <tr className="p-4 text-center border-b border-blue-gray-50">
         <td colSpan={8} className="p-6">
           <span className="flex flex-col justify-center space-x-4 w-full text-center">
             <p className="p-2 text-gray-400">
@@ -100,45 +89,7 @@ const LoadingComponent = () => {
             </p>
           </span>
         </td>
-      </tr> */}
-
-      <tr className="p-4 text-center border-b border-blue-gray-50">
-        <td>
-         May 1, 2024
-        </td>
-        {payrollProcessType === 'manual' && (
-          <td className="py-1">
-            Jason Ryler Los Baños
-          </td>
-        )}
-        <td className="py-1">
-          101
-        </td>
-        <td className="py-1">
-          08:30 AM
-        </td>
-        <td className="py-1">
-          17:30 PM
-        </td>
-        <td className="py-1">
-          <div className="flex justify-center space-x-2">
-          {/* Edit button */}
-            <button
-              onClick={() => {openUpdateModal()}}
-              className="p-2 text-gray-600 hover:text-blue-600"
-            >
-              <FiEdit size={20} />
-            </button>
-          {/* Delete button (red) */}
-            <button
-              onClick={() => {openDeleteModal()}}
-              className="p-2 text-red-600 hover:text-red-800"
-            >
-            <FiTrash2 size={20} />
-            </button>
-          </div>
-       </td>
-     </tr>
+      </tr>
     </>
   )
 }
