@@ -1,6 +1,6 @@
 import Stepper from "./Stepper"
 import { useContext } from "react"
-import { EmployeeRegistrationContext } from "../../../contexts";
+import { EmployeeRegistrationContext } from "@/components/contexts";
 
 const Header = () => {
   const { step } = useContext(EmployeeRegistrationContext)

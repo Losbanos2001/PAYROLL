@@ -1,81 +1,47 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import classNames from '../../../../../helpers/classNames';
-import Step from '../../../../stepper/Step';
-import { contactRelationship, nationalities, regionsPH } from '../helpers/constants';
-import { EmployeeContext } from '../../../../contexts';
+import Step from '@/components/stepper/Step';
+import { EmployeeContext } from '@/components/contexts';
 import { initialEmployeeProfileValues } from '../helpers/utils';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import useUpdateProfile from '../hooks/useUpdateEmployee';
-import type { Employee } from "../../../../types";
+import type { Employee } from "@/components/types";
 import toast from "react-hot-toast";
-import CustomToast from "../../../../Toast/CustomToast"
+import CustomToast from '@/components/Toast/CustomToast';
 import { useQueryClient } from '@tanstack/react-query';
+import EmployeeInfo from './subcomponents/EmployeeInfo';
+import ContactInfo from './subcomponents/ContactInfo';
+import EmergencyContact from './subcomponents/EmergencyContact';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Convert Yup schema to Zod schema
-const updateEmpProfileSchema = z.object({
-  first_name: z.string().min(1, "First name is required"),
-  last_name: z.string().min(1, "Last name is required"),
-  middle_name: z.string().nullable(),
-  extension: z.string().nullable(),
-  gender: z.string().nullable(),
-  birthday: z.string().nullable(),
-  civilStatus: z.string().nullable(),
-  nationality: z.string().nullable(),
-  place_of_birth: z.string().nullable(),
-  mother_maiden_name: z.string().nullable(),
-  email: z.string().email().nullable(),
-  address: z.string().nullable(),
-  region: z.string().nullable(),
-  local_address: z.string().nullable(),
-  local_address_zip: z.number().nullable(),
-  foreign_address: z.string().nullable(),
-  foreign_address_zip: z.number().nullable(),
-  rdo_code: z.number().nullable(),
-  contact_num: z.string().nullable(),
-  contact_person: z.string().nullable(),
-  relationship: z.string().nullable(),
-  contact_person_num: z.string().nullable(),
-  contact_person_address: z.string().nullable(),
-});
-
-type FormValues = z.infer<typeof updateEmpProfileSchema>;
-
 export default function UpdateEmployeeModal({ isOpen, onClose }: ModalProps) {
-  const [activeTab, setActiveTab] = useState("EmployeeInfo");
+  const [step, setStep] = useState(1);
   const { selectedEmployee, setSelectedRows } = useContext(EmployeeContext);
-  const { mutate } = useUpdateProfile();
+  const { mutate, isPending } = useUpdateProfile();
   const queryClient = useQueryClient();
 
   const { 
-    register, 
+    control, 
     handleSubmit, 
-    formState: { errors, isSubmitting }, 
+    formState: { errors, isValid }, 
     reset,
-    setValue,
-    watch
-  } = useForm<FormValues>({
-    resolver: zodResolver(updateEmpProfileSchema),
-    defaultValues: initialEmployeeProfileValues
+    setValue
+  } = useForm<Employee>({
+    defaultValues: initialEmployeeProfileValues,
+    mode: 'onBlur'
   });
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "ContactInfo":
-        return <ContactInfo register={register} errors={errors} watch={watch} />;
-      case "EmergencyContact":
-        return <EmergencyContact register={register} errors={errors} watch={watch} />;
-      case "EmployeeInfo":
-        return <EmployeeInfo register={register} errors={errors} watch={watch} />;
-      default:
-        return <EmployeeInfo register={register} errors={errors} watch={watch} />;
+  const handleNext = () => {
+    if (step < 3) {
+      setStep(step + 1);
     }
+  };
+
+  const handleBack = () => {
+    setStep((prevStep: number) => (prevStep > 1 ? prevStep - 1 : prevStep));
   };
 
   useEffect(() => {
@@ -84,13 +50,17 @@ export default function UpdateEmployeeModal({ isOpen, onClose }: ModalProps) {
     }
   }, [isOpen, selectedEmployee]);
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: Employee) => {
+    console.log('Form data:', data);
+
     const processedData = Object.fromEntries(
       Object.entries(data).map(([key, value]) => [
         key,
         value === "" ? null : value
       ])
-    ) as FormValues;
+    ) as Employee;
+
+    console.log('Processed data:', processedData);
 
     const filteredData = Object.fromEntries(
       Object.entries(processedData).filter(([_, value]) => value !== null)
@@ -103,6 +73,7 @@ export default function UpdateEmployeeModal({ isOpen, onClose }: ModalProps) {
 
     mutate(updatedProfile, {
       onSuccess: () => {
+        console.log('Update successful:', updatedProfile);
         queryClient.invalidateQueries({ queryKey: ["employees"] });
         toast.custom(
           () => <CustomToast message="Successfully updated employee." type="success" />,
@@ -121,7 +92,7 @@ export default function UpdateEmployeeModal({ isOpen, onClose }: ModalProps) {
 
   const handleClose = () => {
     onClose();
-    setActiveTab("EmployeeInfo");
+    setStep(1);
   };
 
   useEffect(() => {
@@ -144,6 +115,19 @@ export default function UpdateEmployeeModal({ isOpen, onClose }: ModalProps) {
       });
     }
   }, [selectedEmployee, setValue]);
+
+  const renderFormInputs = () => {
+    switch (step) {
+      case 1:
+        return <EmployeeInfo control={control} errors={errors} />;
+      case 2:
+        return <ContactInfo control={control} errors={errors} />;
+      case 3:
+        return <EmergencyContact control={control} errors={errors} />;
+      default:
+        return <></>;
+    }
+  };
 
   return (
     <>
@@ -175,55 +159,49 @@ export default function UpdateEmployeeModal({ isOpen, onClose }: ModalProps) {
                       </svg>
                     </button>
                   </div>
-                  <div className="flex justify-start mx-8 mt-5 mb-3">
-                    <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400">
-                      <li className="me-2">
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab("EmployeeInfo")}
-                          className={classNames('inline-block px-4 py-3 rounded-lg', activeTab === 'EmployeeInfo' ? 'text-white bg-blue-600': 'bg-white text-slate-900')}>
-                          Employee Information
-                        </button>
-                      </li>
-                      <li className="me-2">
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab("ContactInfo")}
-                          className={classNames('inline-block px-4 py-3 rounded-lg', activeTab === 'ContactInfo' ? 'text-white bg-blue-600': 'bg-white text-slate-900')}>
-                          Contact Information
-                        </button>
-                      </li>
-                      <li className="me-2">
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab("EmergencyContact")}
-                          className={classNames('inline-block px-4 py-3 rounded-lg', activeTab === 'EmergencyContact' ? 'text-white bg-blue-600': 'bg-white text-slate-900')}>
-                          Emergency Contact
-                        </button>
-                      </li>
-                    </ul>
+                  <div className="flex flex-col items-center">
+                    <Stepper step={step} />
                   </div>
                   <div className="mx-10">
                     <p
-                      onClick={() => reset(initialEmployeeProfileValues)}
+                      onClick={() => reset()}
                       className="mb-3 underline cursor-pointer text-end">
                       Clear All
                     </p>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                      {renderTabContent()}
-                      <div className="flex justify-end gap-2 px-4 py-3 bg-gray-50 sm:px-6">
-                        <button
-                          type="button"
-                          onClick={() => { reset(); setSelectedRows([]); handleClose(); }}
-                          className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                          Cancel
-                        </button>
-                        <button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                          Save
-                        </button>
+                      <div className="grid gap-6 mb-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {renderFormInputs()}
+                      </div>
+                      <div className="justify-between my-7 sm:flex sm:flex-row-reverse">
+                        <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
+                          {step === 3 ? (
+                            <button
+                              disabled={isPending || !isValid}
+                              type="submit"
+                              className={`upload-csv-btn ${
+                                isPending || !isValid ? 'bg-gray-400 cursor-not-allowed' : ''
+                              }`}
+                            >
+                              {isPending ? "Submitting..." : !isValid ? "Invalid fields" : "Save"}
+                            </button>
+                          ) : (
+                            <button onClick={handleNext} type="button" className="upload-csv-btn">
+                              Next
+                            </button>
+                          )}
+                        </span>
+                        <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                          {step > 1 && (
+                            <button type="button" onClick={handleBack} className="upload-csv-btn">
+                              Back
+                            </button>
+                          )}
+                          {step === 1 && (
+                            <button type="button" onClick={handleClose} className="cancel-upload-csv-btn">
+                              Close
+                            </button>
+                          )}
+                        </span>
                       </div>
                     </form>
                   </div>
@@ -236,356 +214,6 @@ export default function UpdateEmployeeModal({ isOpen, onClose }: ModalProps) {
     </>
   );
 }
-
-const EmployeeInfo: FC<{ register: any, errors: any, watch: any }> = ({ register, errors, watch }) => {
-  return (
-    <>
-      <div>
-        <label htmlFor="first_name" className="label-modal">
-          First Name
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("first_name")}
-          type="text"
-          id="first_name"
-          placeholder="Enter First Name..."
-        />
-        <div className="mt-1 text-red-500">{errors.first_name?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="middle_name" className="label-modal">
-          Middle Name
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("middle_name")}
-          type="text"
-          id="middle_name"
-          placeholder="Enter Middle Name..."
-        />
-        <div className="mt-1 text-red-500">{errors.middle_name?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="last_name" className="label-modal">
-          Last Name
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("last_name")}
-          type="text"
-          id="last_name"
-          placeholder="Enter Last Name..."
-        />
-        <div className="mt-1 text-red-500">{errors.last_name?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="extension" className="label-modal">
-          Extension
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("extension")}
-          type="text"
-          id="extension"
-          placeholder="Enter Extension (e.g Sr., Jr., III)"
-        />
-        <div className="mt-1 text-red-500">{errors.extension?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="gender" className="label-modal">
-          Gender
-        </label>
-        <select
-          className="input-text-modal"
-          {...register("gender")}
-          id="gender"
-        >
-          <option value="">Select gender:</option>
-          <option value="F">Female</option>
-          <option value="M">Male</option>
-          <option value="Other">Other</option>
-        </select>
-        <div className="mt-1 text-red-500">{errors.gender?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="birthday" className="label-modal">
-          Birthday
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("birthday")}
-          type="date"
-          id="birthday"
-          placeholder="Select date"
-        />
-        <div className="mt-1 text-red-500">{errors.birthday?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="civilStatus" className="label-modal">
-          Civil Status
-        </label>
-        <select
-          className="input-text-modal"
-          {...register("civilStatus")}
-          id="civilStatus"
-        >
-          <option value="">Select civil status:</option>
-          <option value="Single">Single</option>
-          <option value="Married">Married</option>
-          <option value="Divorced">Divorced</option>
-          <option value="Separated">Separated</option>
-          <option value="Widowed">Widowed</option>
-          <option value="Other">Other</option>
-        </select>
-        <div className="mt-1 text-red-500">{errors.civilStatus?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="nationality" className="label-modal">
-          Nationality
-        </label>
-        <select
-          className="input-text-modal"
-          {...register("nationality")}
-          id="nationality"
-        >
-          <option value="">Select nationality:</option>
-          {nationalities.map((nationality) => {
-            return (
-              <option key={nationality} value={nationality}>
-                {nationality}
-              </option>
-            )
-          })}
-        </select>
-        <div className="mt-1 text-red-500">{errors.nationality?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="place_of_birth" className="label-modal">
-          Place of Birth
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("place_of_birth")}
-          type="text"
-          id="place_of_birth"
-          placeholder="Enter Place of Birth..."
-        />
-        <div className="mt-1 text-red-500">{errors.place_of_birth?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="mother_maiden_name" className="label-modal">
-          Mother's Maiden Name
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("mother_maiden_name")}
-          type="text"
-          id="mother_maiden_name"
-          placeholder="Enter Mother's Maiden Name..."
-        />
-        <div className="mt-1 text-red-500">{errors.mother_maiden_name?.message}</div>
-      </div>
-    </>
-  );
-};
-
-const ContactInfo: FC<{ register: any, errors: any, watch: any }> = ({ register, errors, watch }) => {
-  return (
-    <>
-      <div>
-        <label htmlFor="email" className="label-modal">
-          Email
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("email")}
-          type="email"
-          id="email"
-          placeholder="Enter Email..."
-        />
-        <div className="mt-1 text-red-500">{errors.email?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="address" className="label-modal">
-          Address
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("address")}
-          type="text"
-          id="address"
-          placeholder="Enter Address..."
-        />
-        <div className="mt-1 text-red-500">{errors.address?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="region" className="label-modal">
-          Region
-        </label>
-        <select
-          className="input-text-modal"
-          {...register("region")}
-          id="region"
-        >
-          <option value="">Select region:</option>
-          {regionsPH.map((region) => {
-            return (
-              <option key={region} value={region}>
-                {region}
-              </option>
-            );
-          })}
-        </select>
-        <div className="mt-1 text-red-500">{errors.region?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="local_address" className="label-modal">
-          Local Home Address
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("local_address")}
-          type="text"
-          id="local_address"
-          placeholder="Enter Local Home Address..."
-        />
-        <div className="mt-1 text-red-500">{errors.local_address?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="local_address_zip" className="label-modal">
-          Local Home Address Zip Code
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("local_address_zip")}
-          type="number"
-          id="local_address_zip"
-          placeholder="Enter Local Home Address Zip Code..."
-        />
-        <div className="mt-1 text-red-500">{errors.local_address_zip?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="foreign_address" className="label-modal">
-          Foreign Address
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("foreign_address")}
-          type="string"
-          id="foreign_address"
-          placeholder="Enter Foreign Address..."
-        />
-        <div className="mt-1 text-red-500">{errors.foreign_address?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="foreign_address_zip" className="label-modal">
-          Foreign Address Zip Code
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("foreign_address_zip")}
-          type="number"
-          id="foreign_address_zip"
-          placeholder="Enter Foreign Address Zip Code..."
-        />
-        <div className="mt-1 text-red-500">{errors.foreign_address_zip?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="rdo_code" className="label-modal">
-          RDO Code
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("rdo_code")}
-          type="number"
-          id="rdo_code"
-          placeholder="Enter RDO Code..."
-        />
-        <div className="mt-1 text-red-500">{errors.rdo_code?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="contact_num" className="label-modal">
-          Contact Number
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("contact_num")}
-          type="text"
-          id="contact_num"
-          placeholder="Enter Contact Number..."
-        />
-        <div className="mt-1 text-red-500">{errors.contact_num?.message}</div>
-      </div>
-    </>
-  );
-};
-
-const EmergencyContact: FC<{ register: any, errors: any, watch: any }> = ({ register, errors, watch }) => {
-  return (
-    <>
-      <div>
-        <label htmlFor="contact_person" className="label-modal">
-          Contact Person
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("contact_person")}
-          type="text"
-          id="contact_person"
-          placeholder="Enter Contact Person..."
-        />
-        <div className="mt-1 text-red-500">{errors.contact_person?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="relationship" className="label-modal">
-          Relationship
-        </label>
-        <select
-          className="input-text-modal"
-          {...register("relationship")}
-          id="relationship"
-        >
-          <option value="">Select relationship:</option>
-          {contactRelationship.map((relationship) => {
-            return (
-              <option key={relationship} value={relationship}>
-                {relationship}
-              </option>
-            )
-          })}
-        </select>
-        <div className="mt-1 text-red-500">{errors.relationship?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="contact_person_num" className="label-modal">
-          Contact Person Number
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("contact_person_num")}
-          type="text"
-          id="contact_person_num"
-          placeholder="Enter Contact Person Number..."
-        />
-        <div className="mt-1 text-red-500">{errors.contact_person_num?.message}</div>
-      </div>
-      <div>
-        <label htmlFor="contact_person_address" className="label-modal">
-          Contact Person Address
-        </label>
-        <input
-          className="input-text-modal"
-          {...register("contact_person_address")}
-          type="text"
-          id="contact_person_address"
-          placeholder="Enter Contact Person Address..."
-        />
-        <div className="mt-1 text-red-500">{errors.contact_person_address?.message}</div>
-      </div>
-    </>
-  );
-};
 
 const Stepper = ({ step }: { step: number }) => {
   return (

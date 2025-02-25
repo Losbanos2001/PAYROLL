@@ -26,13 +26,13 @@ const ConfirmProceedModal: FC<ModalProps> = ({ isOpen, onClose }: any) => {
       <SetupCompleteModal isOpen={isModalOpen} onClose={closeModal} />
       {isOpen && (
         <div  className={`modal ${modalClassName}`}>
-          <div className="overflow-y-auto fixed inset-0">
-            <div className="flex justify-center items-center px-4 pt-2 pb-20 min-h-screen text-center sm:block sm:p-0">
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen px-4 pt-2 pb-20 text-center sm:block sm:p-0">
               <div className="fixed inset-0 transition-opacity">
                 <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
               </div>
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
-              <div className="inline-block overflow-hidden text-left align-bottom bg-white rounded-lg shadow-xl transition-all transform sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:pb-6">
+              <div className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:pb-6">
                 <div className="mb-10 text-center sm:text-left">
                   <div className="flex justify-center mt-2 sm:p-6">
                     <svg width="104" height="104" viewBox="0 0 104 104" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +43,7 @@ const ConfirmProceedModal: FC<ModalProps> = ({ isOpen, onClose }: any) => {
                     Are you sure to proceed to the next stage of the set-up?
                   </h1>
                 </div>
-                <div className="justify-center pr-6 mt-5 w-full sm:mt-4 sm:flex sm:flex-row-reverse sm:pl-6">
+                <div className="justify-center w-full pr-6 mt-5 sm:mt-4 sm:flex sm:flex-row-reverse sm:pl-6">
                   <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
                     <button type="button"
                       className="upload-csv-btn"
@@ -52,7 +52,7 @@ const ConfirmProceedModal: FC<ModalProps> = ({ isOpen, onClose }: any) => {
                       Yes
                     </button>
                   </span>
-                  <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                  <span className="flex w-full mt-3 rounded-md shadow-sm sm:mt-0 sm:w-auto">
                     <button type="button"
                       className="cancel-upload-csv-btn"
                       onClick={onClose}

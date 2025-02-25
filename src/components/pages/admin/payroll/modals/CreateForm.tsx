@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { DailyLogsContext, LogsContext } from "../../../../contexts";
+import { DailyLogsContext, LogsContext } from "@/components/contexts";
 import useAddLog from "../hooks/useAddLog"; 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 // import { nanoid } from "nanoid";
@@ -29,7 +29,7 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
   const [tooltipVisible, setTooltipVisible] = useState<string | null>(null);
   const {mutate} = useAddLog();
   const queryClient = useQueryClient();
-  const [employeeNames, setNames] = useState<string[]>([]);
+  const [employeeNames, setNames] = useState<string[]>(['John']);
 
   const { data: employeeData, isPending } = useQuery({
     queryKey: ["employeeData"],
@@ -78,7 +78,7 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
     );
   };
 
-  const { control, handleSubmit, setValue, reset, formState: { isSubmitting, isValid }} = useForm({
+  const { control, handleSubmit, setValue, reset, watch, formState: { isSubmitting, isValid }} = useForm({
     defaultValues: initialLogsValues,
   });
 
@@ -135,17 +135,17 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
   return (
     <>
       {isOpen && (
-        <div className="block absolute z-50">
-          <div className="overflow-y-auto fixed inset-0">
-            <div className="flex justify-center items-center px-4 pt-2 pb-20 min-h-screen text-center sm:block sm:p-0">
+        <div className="absolute z-50 block">
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen px-4 pt-2 pb-20 text-center sm:block sm:p-0">
               <div className="fixed inset-0 transition-opacity">
                 <div className="absolute inset-0 bg-[#5982ff] opacity-40 mix-blend-lighten"></div>
               </div>
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
-              <div className="inline-block overflow-hidden w-1/3 text-left align-bottom bg-white rounded-lg shadow-xl transition-all transform sm:my-8 sm:align-middle sm:mx-6 md:mx-28">
+              <div className="inline-block w-1/3 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:mx-6 md:mx-28">
                 <div className="text-center sm:text-left">
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex justify-between p-5 w-full bg-blue-600">
+                    <div className="flex justify-between w-full p-5 bg-blue-600">
                       <h3 className="pr-2 text-lg font-medium leading-6 text-white truncate">Create Daily Logs</h3>
                       <button type="button" onClick={() => { reset(); handleClose(); }}>
                         <svg
@@ -206,16 +206,16 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
                           />
                         </div>
                         <div className="flex space-x-4">
-                          <div className="py-2 w-full">
+                          <div className="w-full py-2">
                             <h1 className="mb-1 label-modal">Time In</h1>
                             <div className="flex items-center space-x-2">
-                              <TimeInput name="time_in" control={control} />
+                              <TimeInput name="time_in" control={control} watch={watch} />
                             </div>
                           </div>
-                          <div className="py-2 w-full">
+                          <div className="w-full py-2">
                             <h1 className="mb-1 label-modal">Time Out</h1>
                             <div className="flex items-center space-x-2">
-                              <TimeInput name="time_out" control={control} />
+                              <TimeInput name="time_out" control={control} watch={watch} />
                             </div>
                           </div>
                         </div>
@@ -229,12 +229,12 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
                             </button>
                           ) : (
                             <button type="submit" disabled={isSubmitting}
-                              className={`inline-flex justify-center px-4 py-2 w-full text-base font-bold leading-6 text-white bg-blue-600 rounded-md border border-blue-700 shadow-sm transition duration-150 ease-in-out focus:outline-none hover:bg-blue-800 hover:shadow-md focus:shadow-outline-blue sm:text-sm sm:leading-5`}>
+                              className={`inline-flex justify-center px-10 py-2 w-full text-base font-bold leading-6 text-white bg-blue-600 rounded-md border border-blue-700 shadow-sm transition duration-150 ease-in-out focus:outline-none hover:bg-blue-800 hover:shadow-md focus:shadow-outline-blue sm:text-sm sm:leading-5`}>
                               {isSubmitting ? "Submitting..." : "Save"}
                             </button>
                           )}
                         </span>
-                        <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                        <span className="flex w-full mt-3 rounded-md shadow-sm sm:mt-0 sm:w-auto">
                           <button type="button"
                             onClick={() => { reset(); handleClose(); }}
                             className="cancel-upload-csv-btn">
@@ -254,23 +254,49 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
   );
 }
 
-const TimeInput = ({ name, control }: { name: string; control: any }) => {
+const TimeInput = ({ name, control, watch }: { name: string; control: any; watch: any }) => {
+  const validateTime = (hours: string, minutes: string) => {
+    if (!hours || !minutes) return "Hours and minutes are required";
+    if (isNaN(Number(hours)) || isNaN(Number(minutes))) return "Must be numbers";
+    if (Number(hours) < 0 || Number(hours) > 23) return "Hours must be between 0-23";
+    if (Number(minutes) < 0 || Number(minutes) > 59) return "Minutes must be between 0-59";
+    return true;
+  };
+
   return (
     <>
       <Controller
         control={control}
         name={`${name}_hours`}
-        render={({ field }) => 
-        <input {...field} 
-        className="border bg-gray-50  border-gray-300 rounded-lg h-[40px] w-full" 
-        placeholder="Hour" />}
+        rules={{ 
+          validate: (value) => validateTime(value, watch(`${name}_minutes`))
+        }}
+        render={({ field, fieldState: { error } }) => (
+          <div>
+            <input {...field} 
+              className={`px-3 border bg-gray-50 border-gray-300 rounded-lg h-[40px] w-full ${error ? 'border-red-500' : ''}`}
+              placeholder="Hour" 
+            />
+            {error && <span className="text-xs text-red-500">{error.message}</span>}
+          </div>
+        )}
       />
+       <h1>:</h1>
       <Controller
         control={control}
         name={`${name}_minutes`}
-        render={({ field }) => <input {...field}
-        className="border bg-gray-50 border-gray-300 rounded-lg h-[40px] w-full"
-        placeholder="Minutes" />}
+        rules={{ 
+          validate: (value) => validateTime(watch(`${name}_hours`), value)
+        }}
+        render={({ field, fieldState: { error } }) => (
+          <div>
+            <input {...field}
+              className={`px-3 border bg-gray-50 border-gray-300 rounded-lg h-[40px] w-full ${error ? 'border-red-500' : ''}`}
+              placeholder="Minutes" 
+            />
+            {error && <span className="text-xs text-red-500">{error.message}</span>}
+          </div>
+        )}
       />
     </>
   );

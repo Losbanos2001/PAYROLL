@@ -9,7 +9,7 @@ import useGetTimeData from "@/components/hooks/useGetTime";
 import CreateUnitModal from "./modal/CreateUnitModal";
 import useGetUnitsData  from "./hooks/useGetUnitData";
 import { SelfServiceContext } from "@/components/contexts"; 
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdDownload, MdUpload  } from 'react-icons/md';
 import { FaTrash } from "react-icons/fa";
 import { RiPencilFill } from "react-icons/ri";
 
@@ -164,25 +164,14 @@ const Unit = () => {
         onClose={closeDeleteModal}
       />
       <div className="flex pr-10 space-x-4" style={{ alignSelf: "end" }}>
-        <div className="relative flex group sm:mb-2">
+        <div className="flex relative group sm:mb-2">
           <button
             id="downloadbtn"
             onClick={handleDownload}
-            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-bold py-2 px-6 rounded-lg inline-flex items-center"
+            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-semibold py-2 px-6 rounded-lg inline-flex items-center"
           >
-            <svg
-              width="15"
-              height="17"
-              viewBox="0 0 15 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M14.7063 6H10.5045V0H4.2018V6H0L7.35314 13L14.7063 6ZM0 15V17H14.7063V15H0Z"
-                fill="#2757ED"
-              />
-            </svg>
-            <span className="ml-2">Download Template</span>
+            <MdDownload className="w-6 h-6 mr-2.5" />
+            Download Template
           </button>
           <span className="absolute z-40 w-fit top-12 scale-0 rounded-lg bg-[#344960] text-white p-4 text-xs  group-hover:scale-100 flex">
             <span>
@@ -204,25 +193,14 @@ const Unit = () => {
             </h1>
           </span>
         </div>
-        <div className="relative flex group sm:mb-2">
+        <div className="flex relative group sm:mb-2">
           <button
             id="uploadbtn"
             onClick={openUpload}
-            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-bold py-2 px-6 rounded-lg inline-flex items-center"
+            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-semibold py-2 px-6 rounded-lg inline-flex items-center"
           >
-            <svg
-              width="15"
-              height="18"
-              viewBox="0 0 15 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M4.34171 13.5157H10.4205V7.51569H14.473L7.3811 0.51569L0.289185 7.51569H4.34171V13.5157ZM0.289185 15.5157H14.473V17.5157H0.289185V15.5157Z"
-                fill="#2757ED"
-              />
-            </svg>
-            <span className="ml-2">Upload File</span>
+            <MdUpload className="w-6 h-6 mr-2.5" />
+            Upload File
           </button>
           <span className="absolute z-40 w-[200px] top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex">
             <span>
@@ -246,10 +224,10 @@ const Unit = () => {
         </div>
       </div>
       <div className="xl:w-full bg-white mx-20 rounded-[10px] shadow-md w-3/4 border-2">
-        <div className="border-b-2 mx-14 xl:flex border-stone-700 lg:max-w-full xl:justify-between lg:grid-col">
+        <div className="mx-14 border-b-2 xl:flex border-stone-700 lg:max-w-full xl:justify-between lg:grid-col">
           <div className="flex">
             <h1 className="my-5 ml-5 text-3xl font-bold">Unit</h1>
-            <div className="relative flex ml-5 my-7 group">
+            <div className="flex relative my-7 ml-5 group">
               <svg
                 width="21"
                 height="21"
@@ -270,7 +248,7 @@ const Unit = () => {
               </span>
             </div>
           </div>
-          <div className="self-end flex-auto" style={{ textAlign: "end" }}>
+          <div className="flex-auto self-end" style={{ textAlign: "end" }}>
             <button
               onClick={openModal}
               id="addbtn"
@@ -281,7 +259,7 @@ const Unit = () => {
           </div>
         </div>
         <div className="flex flex-col mx-14 lg:grid">
-          <div className="overflow-auto bg-white rounded max-h-64">
+          <div className="overflow-auto max-h-64 bg-white rounded">
             <table className="w-full border-b-2 table-auto">
               <thead className="sticky top-0 text-xs uppercase bg-white border-b-2">
                 <tr>
@@ -298,7 +276,7 @@ const Unit = () => {
                     />
                   </th>
                   <th scope="col" className="px-3 py-3.5">
-                    <div className="flex items-center justify-center">
+                    <div className="flex justify-center items-center">
                       <h1 className="text-black">Name</h1>
                       <button
                         disabled={unitsData?.units?.length === 0}
@@ -372,7 +350,7 @@ const Unit = () => {
                               openEditModal();
                             }}
                             id="editbtn"
-                            className="p-2 text-gray-600 border-2 border-gray-600 rounded-md hover:text-blue-600 hover:border-blue-600 disabled:bg-gray-300 disabled:text-gray-500"
+                            className="p-2 text-gray-600 rounded-md border-2 border-gray-600 hover:text-blue-600 hover:border-blue-600 disabled:bg-gray-300 disabled:text-gray-500"
                             disabled={selectedRows.length > 1}
                           >
                             <RiPencilFill size={17} />
@@ -384,7 +362,7 @@ const Unit = () => {
                               openDeleteModal();
                             }}
                             id="deletebtn"
-                            className="p-2 text-red-600 border-2 border-red-600 rounded-md hover:text-red-800 hover:border-red-800"
+                            className="p-2 text-red-600 rounded-md border-2 border-red-600 hover:text-red-800 hover:border-red-800"
                           >
                             <FaTrash size={17} />
                           </button>
@@ -401,7 +379,7 @@ const Unit = () => {
               <h1>Total Record/s: {unitsData?.units?.length || 0}</h1>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex gap-2 items-center">
               <span>Record per page: {pageSize}</span>
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

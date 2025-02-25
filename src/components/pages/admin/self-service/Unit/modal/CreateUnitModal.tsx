@@ -23,7 +23,6 @@ const CreateUnitModal: FC<ModalProps> = ({ isOpen, onClose }: any) => {
   });
 
   const onSubmit = (values: { name: string }) => {
-    console.log('Form submitted with values:', values);
     mutate({ ...values }, {
       onSuccess: (data: any) => {
         toast.custom(

@@ -82,9 +82,12 @@ export default function EditFormModal({ isOpen, onClose, }: ModalProps) {
 
   useEffect(() => {
     if (isOpen && selectedLog) {
-      setFullName([`${selectedLog.employee.firstname} ${selectedLog.employee.lastname}`]);
+      const employeeName = `${selectedLog.employee.id} - ${selectedLog.employee.firstname} ${selectedLog.employee.lastname}`;
+      setFullName([employeeName]);
+      setSelected(prev => ({ ...prev, employee: [employeeName] }));
+      setValue('employee', [employeeName]);
     }
-  }, [isOpen, selectedLog])
+  }, [isOpen, selectedLog, setValue]);
 
   const { data: employeeData, isPending } = useQuery({
     queryKey: ['employeeData'],
@@ -210,16 +213,16 @@ export default function EditFormModal({ isOpen, onClose, }: ModalProps) {
   return (
     <>
       {(isOpen && selectedLog && employeeNames) && (
-        <div className="block absolute z-50">
-          <div className="overflow-y-auto fixed inset-0">
-            <div className="flex justify-center items-center px-4 pt-2 pb-20 min-h-screen text-center sm:block sm:p-0">
+        <div className="absolute z-50 block">
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen px-4 pt-2 pb-20 text-center sm:block sm:p-0">
               <div className="fixed inset-0 transition-opacity">
                 <div className="absolute inset-0 bg-[#5982ff] opacity-40 mix-blend-lighten"></div>
               </div>
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
-              <div className="inline-block overflow-hidden w-1/2 text-left align-bottom bg-white rounded-lg shadow-xl transition-all transform sm:my-8 sm:align-middle sm:mx-6 md:mx-28">
+              <div className="inline-block w-1/3 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:mx-6 md:mx-28">
                 <div className="text-center sm:text-left">
-                  <div className="flex justify-between p-5 w-full bg-blue-600">
+                  <div className="flex justify-between w-full p-5 bg-blue-600">
                     <h3 className="pr-2 text-lg font-medium leading-6 text-white truncate">
                       Edit Daily Logs
                     </h3>
@@ -306,39 +309,65 @@ export default function EditFormModal({ isOpen, onClose, }: ModalProps) {
                             placeholder="Enter Reason..."
                           />
                         </div>
-                        <div className="flex space-x-3.5">
-                          <div className="py-2 w-full">
-                            <h1 className="mb-1 text-sm font-normal">
-                              Time In
-                            </h1>
-                            <TimeInput name="timein" time={selectedLog.timein} register={register} />
+                        <div className="flex space-x-4">
+                          <div className="w-full py-2">
+                            <h1 className="mb-1 label-modal">Time In</h1>
+                            <div className="flex items-center space-x-2">
+                              <input
+                                {...register('time_in_hours')}
+                                className="px-3 border bg-gray-50 border-gray-300 rounded-lg h-[40px] w-full"
+                                type="text"
+                                placeholder="Hour"
+                              />
+                              <h1>:</h1>
+                              <input
+                                {...register('time_in_minutes')}
+                                className="px-3 border bg-gray-50 border-gray-300 rounded-lg h-[40px] w-full"
+                                type="text"
+                                placeholder="Minutes"
+                              />
+                            </div>
                           </div>
-                          <div className="py-2 w-full">
-                            <h1 className="mb-1 text-sm font-normal">
-                              Time Out
-                            </h1>
-                            <TimeInput name="timeout" time={selectedLog.timeout} register={register} />
+                          <div className="w-full py-2">
+                            <h1 className="mb-1 label-modal">Time Out</h1>
+                            <div className="flex items-center space-x-2">
+                              <input
+                                {...register('time_out_hours')}
+                                className="px-3 border bg-gray-50 border-gray-300 rounded-lg h-[40px] w-full"
+                                type="text"
+                                placeholder="Hour"
+                              />
+                              <h1>:</h1>
+                              <input
+                                {...register('time_out_minutes')}
+                                className="px-3 border bg-gray-50 border-gray-300 rounded-lg h-[40px] w-full"
+                                type="text"
+                                placeholder="Minutes"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
                       <div className="justify-start my-7 sm:flex sm:flex-row-reverse">
-                        <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
+                        <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-[120px]">
                           <button
                             type="submit"
                             disabled={!isValid}
-                            className={`inline-flex justify-center px-10 py-2 w-full text-base font-bold leading-6 text-white rounded-md border shadow-sm transition duration-150 ease-in-out ${
+                            className={`inline-flex justify-center w-full px-4 py-2 text-base font-bold leading-6 text-white rounded-md border shadow-sm transition duration-150 ease-in-out ${
                               !isValid
-                                ? 'bg-slate-500 border-gray-700 hover:bg-gray-400'
+                                ? 'border-gray-700 bg-slate-500 hover:bg-gray-400'
                                 : 'bg-blue-600 border-blue-700 hover:bg-blue-800'
                             } focus:outline-none hover:shadow-md focus:shadow-outline-blue sm:text-sm sm:leading-5`}
                           >
                             {!isValid ? 'Invalid fields' : 'Save'}
                           </button>
                         </span>
-                        <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
-                          <button type="button"
+                        <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-[120px]">
+                          <button 
+                            type="button"
                             onClick={handleClose}
-                            className="px-10 cancel-upload-csv-btn">
+                            className="w-full cancel-upload-csv-btn"
+                          >
                             Close
                           </button>
                         </span>
@@ -354,41 +383,3 @@ export default function EditFormModal({ isOpen, onClose, }: ModalProps) {
     </>
   );
 }
-
-const TimeInput = ({ 
-  name, 
-  time,
-  register 
-}: { 
-  name: "timein" | "timeout"; 
-  time: string;
-  register: UseFormRegister<any>;
-}) => {
-  let hours, minutes;
-
-  if (time) {
-    [hours, minutes] = time.split(":");
-  }
-
-  return (
-    <>
-      {name && (
-        <>
-          <input
-            {...register(`${name}_hours`)}
-            className="px-3 border bg-gray-50 border-gray-300 rounded-lg h-[53.57px] w-full"
-            type="text"
-            placeholder="Hour"
-          />
-          <h1>:</h1>
-          <input
-            {...register(`${name}_minutes`)}
-            className="px-3 border bg-gray-50 border-gray-300 rounded-lg h-[53.57px] w-full"
-            type="text"
-            placeholder="Minutes"
-          />
-        </>
-      )}
-    </>
-  );
-};

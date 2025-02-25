@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { LogsContext } from "../../../contexts";
 import { useQuery} from '@tanstack/react-query';
 import { getLogs } from "./helpers/api";
+import { dummyPayrollData } from './helpers/dummyData';
 
 export default function LogWrapper({ children, }: { children: React.ReactNode; }) {
 	const [currentLogs, setCurrentLogs] = useState<any[]>([]);
@@ -11,11 +12,11 @@ export default function LogWrapper({ children, }: { children: React.ReactNode; }
 	const [selectedLog, setSelectedLog] = useState<any>({
 		id: 0,
 		employee: {
-			id: 0,
+			id: '',
 			firstname: '',
 			lastname: '',
 			old_employee_id: null,
-			employeeid: null,
+			employeeid: '',
 			employeeid2: 0,
 			email: ''
 		},
@@ -36,7 +37,8 @@ export default function LogWrapper({ children, }: { children: React.ReactNode; }
 
 	const { data: logsData, isLoading } = useQuery({
 		queryKey: ['logs'],
-		queryFn: getLogs
+		// queryFn: getLogs
+		queryFn: () => Promise.resolve(dummyPayrollData)
 	});
 
 	const formatDateTime = (dateTimeString: string) => {
@@ -55,7 +57,8 @@ export default function LogWrapper({ children, }: { children: React.ReactNode; }
 
 	useEffect(() => {
 		if (!isLoading) {
-			const data: any[] = logsData?.map((item: any) => ({
+			// const data: any[] = logsData?.map((item: any) => ({
+			const data = logsData?.map((item: any) => ({
 				...item,
 				employee: {
 					id: item.employee.id,
@@ -68,7 +71,8 @@ export default function LogWrapper({ children, }: { children: React.ReactNode; }
 				},
 				//formatDateTime(item.time_in),
 				//formatDateTime(item.time_out)
-			}));
+			// }));
+			})) ?? [];
 			setLogs(data)
 			// setLogs(logsData)
 		}

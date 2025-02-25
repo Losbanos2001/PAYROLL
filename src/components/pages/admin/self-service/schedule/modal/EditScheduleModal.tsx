@@ -169,7 +169,6 @@ export default function EditScheduleModal({
       timeOut[0] - timeIn[0] + (timeOut[1] - timeIn[1]) / 60;
 
     if (scheduleSettings.flexible_time) {
-      console.log("Flexible time is checked, proceeding to submit.");
     } else if (scheduleSettings.isFlexibleHoursChecked) {
       const totalExpectedHours = totalWorkHours - breakHours;
       if (Number(data.workhours) !== totalExpectedHours) {
@@ -219,10 +218,8 @@ export default function EditScheduleModal({
     };
 
     try {
-      console.log('Submitting data:', submitData);
       mutate(submitData, {
         onSuccess: (response) => {
-          console.log('Update successful:', response);
           queryClient.invalidateQueries({ queryKey: ['schedulesData'] });
           toast.custom(
             () => <CustomToast message="Schedule updated successfully" type="success" />,
@@ -233,7 +230,6 @@ export default function EditScheduleModal({
           reset();
         },
         onError: (error: any) => {
-          console.error('Update failed:', error);
           toast.custom(
             () => <CustomToast message={error.message || 'Failed to update schedule'} type="error" />,
             { duration: 4000 }
@@ -241,7 +237,6 @@ export default function EditScheduleModal({
         },
       });
     } catch (error: any) {
-      console.error('Error in form submission:', error);
       toast.custom(
         () => <CustomToast message={error.message || 'An error occurred'} type="error" />,
         { duration: 4000 }
@@ -265,7 +260,6 @@ export default function EditScheduleModal({
       break_type: scheduleSettings.isFixedHoursChecked ? 'fixed' : scheduleSettings.isFlexibleHoursChecked ? 'flexible' : 'nobreak',
     };
 
-    console.log("Saved Settings:", submitData);
     setIsScheduleSettingsOpen(false);
   };
 
@@ -285,15 +279,15 @@ export default function EditScheduleModal({
       <form onSubmit={handleSubmit(onSubmit)}>
         {isOpen && (
           <div className={`block absolute z-10 modal ${modalClassName}`} >
-            <div className="overflow-y-auto fixed inset-0 z-50">
-              <div className="flex justify-center items-center px-4 pt-2 pb-20 min-h-screen text-center sm:block sm:p-0">
+            <div className="fixed inset-0 z-50 overflow-y-auto">
+              <div className="flex items-center justify-center min-h-screen px-4 pt-2 pb-20 text-center sm:block sm:p-0">
                 <div className="fixed inset-0 transition-opacity">
                   <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                 </div>
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
                 <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:pb-6 w-[416px]">
                   <div className="text-center sm:text-left">
-                    <div className="flex justify-between p-2 w-full bg-blue-600">
+                    <div className="flex justify-between w-full p-2 bg-blue-600">
                       <h3 className="text-lg font-medium leading-6 text-white">
                         Edit Schedules
                       </h3>
@@ -315,7 +309,7 @@ export default function EditScheduleModal({
                     <div className="flex justify-end px-4 py-2">
                       <div
                         onClick={() => setIsScheduleSettingsOpen(true)}
-                        className="cursor-pointer border-2 p-2"
+                        className="p-2 border-2 cursor-pointer"
                       >
                         <IoSettingsSharp className="w-6 h-6" />
                       </div>
@@ -453,7 +447,7 @@ export default function EditScheduleModal({
                             {isPending ? 'Saving...' : 'Save'}
                           </button>
                         </span>
-                        <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                        <span className="flex w-full mt-3 rounded-md shadow-sm sm:mt-0 sm:w-auto">
                           <button
                             type="button"
                             className="cancel-upload-csv-btn"
@@ -474,15 +468,15 @@ export default function EditScheduleModal({
 
       {isScheduleSettingsOpen && (
         <div className={`block absolute z-10 modal`}>
-          <div className="overflow-y-auto fixed inset-0 z-50">
-            <div className="flex justify-center items-center px-4 pt-2 pb-20 min-h-screen text-center sm:block sm:p-0">
+          <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen px-4 pt-2 pb-20 text-center sm:block sm:p-0">
               <div className="fixed inset-0 transition-opacity">
                 <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
               </div>
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
               <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:pb-6 w-[406px]">
                 <div className="text-center sm:text-left">
-                  <div className="flex justify-between p-2 w-full bg-blue-600">
+                  <div className="flex justify-between w-full p-2 bg-blue-600">
                     <h3 className="text-lg font-medium leading-6 text-white">
                       Schedule Settings
                     </h3>
@@ -718,7 +712,7 @@ export default function EditScheduleModal({
                           Save Settings
                         </button>
                       </span>
-                      <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                      <span className="flex w-full mt-3 rounded-md shadow-sm sm:mt-0 sm:w-auto">
                         <button
                           type="button"
                           className="cancel-upload-csv-btn"

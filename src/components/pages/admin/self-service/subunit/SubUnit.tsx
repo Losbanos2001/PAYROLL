@@ -10,7 +10,7 @@ import CreateSubUnitModal from "./modal/CreateSubUnitModal";
 import useGetSubUnitData  from "./hooks/useGetSubUnit";
 import { SelfServiceContext } from "@/components/contexts";
 import classNames from "@/helpers/classNames";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdDownload, MdUpload } from 'react-icons/md';
 import { FaTrash } from "react-icons/fa";
 import { RiPencilFill } from "react-icons/ri";
 
@@ -59,7 +59,6 @@ const SubUnits = () => {
   }, [subUnitsData, sortConfig]); 
 
   useEffect(() => {
-    console.log(subUnitsData)
   },[subUnitsData])
 
   const openUpload = () => {
@@ -171,21 +170,10 @@ const SubUnits = () => {
           <button
             id="downloadbtn"
             onClick={handleDownload}
-            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-bold py-2 px-6 rounded-lg inline-flex items-center"
+            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-semibold py-2 px-6 rounded-lg inline-flex items-center"
           >
-            <svg
-              width="15"
-              height="17"
-              viewBox="0 0 15 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M14.7063 6H10.5045V0H4.2018V6H0L7.35314 13L14.7063 6ZM0 15V17H14.7063V15H0Z"
-                fill="#2757ED"
-              />
-            </svg>
-            <span className="ml-2">Download Template</span>
+            <MdDownload className="w-6 h-6 mr-2.5" />
+            Download Template
           </button>
           <span className="absolute z-40 w-fit top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex">
             <span>
@@ -211,21 +199,10 @@ const SubUnits = () => {
           <button
             id="uploadbtn"
             onClick={openUpload}
-            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-bold py-2 px-6 rounded-lg inline-flex items-center"
+            className="whitespace-nowrap text-[#2757ED] bg-white border border-[#2757ED] font-semibold py-2 px-6 rounded-lg inline-flex items-center"
           >
-            <svg
-              width="15"
-              height="18"
-              viewBox="0 0 15 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M4.34171 13.5157H10.4205V7.51569H14.473L7.3811 0.51569L0.289185 7.51569H4.34171V13.5157ZM0.289185 15.5157H14.473V17.5157H0.289185V15.5157Z"
-                fill="#2757ED"
-              />
-            </svg>
-            <span className="ml-2">Upload File</span>
+            <MdUpload className="w-6 h-6 mr-2.5" />
+            Upload File
           </button>
           <span className="absolute z-40 w-[200px] top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex">
             <span>

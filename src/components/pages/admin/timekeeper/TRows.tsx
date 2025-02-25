@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from "react";
 import { MdEmail, MdEdit, MdDelete, MdReplay, MdLockReset, MdKey } from "react-icons/md";
 import { TimekeeperContext, AccountContext } from "../../../contexts";
 import { TimekeeperAccount } from "../../../types";
-import CustomToast from "../../../Toast/CustomToast";
+import CustomToast from "@/components/Toast/CustomToast";
 import toast from 'react-hot-toast';
 import { SendEmailTooltip, ResetSignInTooltip, ResetPassTooltip, ResendEmailTooltip, DeleteTooltip, EditTooltip } from '../timekeeper/Tooltip';
-import classNames from "../../../../helpers/classNames";
+import classNames from "@/helpers/classNames";
 
 interface RowProps {
   setEditFormState: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,13 +54,13 @@ const SendEmailTD = ({ account }: { account: TimekeeperAccount }) => {
   }, [sentEmailsByID]) */
 
   return (
-    <td className="flex items-center justify-center flex-auto gap-2 p-4 text-center border-b border-blue-gray-50">
-      <span className="relative group">
+    <td className="flex flex-auto gap-2 justify-center items-center p-4 text-center border-b border-blue-gray-50">
+      <span className="relative">
         <button type="button" onClick={handleSingleSend} disabled={selectedRows.length > 1}
           className={btnClass}>
           <div className="flex justify-center items-center space-x-2.5">
             <MdEmail className="w-4 h-4" />
-            <p className="max-md:hidden lg:max-2xl:block">{text}</p>
+            <p className="text-xs">{text}</p>
           </div>
         </button>
         <SendEmailTooltip />
@@ -82,8 +82,10 @@ const ActionsTD = ({ account, setSelectedAccount, setEditFormState, setRemoveMod
   const { accessType, step } = useContext(TimekeeperContext);
   const { selectedRows, setSelectedRows, setSendState } = useContext(AccountContext);
 
-  const handleUpdate = (account: any) => {
-    setSelectedRows([account.id])
+  // const handleUpdate = (account: any) => {
+  //   setSelectedRows([account.id])
+  const handleUpdate = (account: TimekeeperAccount) => {
+    console.log('Updating account:', account);
     setSelectedAccount(account);
     setEditFormState(true);
   }
@@ -95,7 +97,7 @@ const ActionsTD = ({ account, setSelectedAccount, setEditFormState, setRemoveMod
           <div className="relative group">
             <button disabled={selectedRows.length > 1} onClick={() => { handleUpdate(account) }}
               className={`px-2.5 py-2 hover:drop-shadow-md shadow-sm rounded outline outline-1 disabled:outline-black disabled:bg-gray-300`}>
-              <div className="flex items-center justify-center">
+              <div className="flex justify-center items-center">
                 <MdEdit className="w-4 h-4" />
               </div>
             </button>
@@ -112,7 +114,7 @@ const ActionsTD = ({ account, setSelectedAccount, setEditFormState, setRemoveMod
                 setRemoveModalState(true);
               }}
               className={`px-2.5 py-2 hover:drop-shadow-md shadow-sm rounded outline outline-1 outline-red-500 disabled:outline-black disabled:bg-gray-300`}>
-              <div className="flex items-center justify-center text-red-500">
+              <div className="flex justify-center items-center text-red-500">
                 <MdDelete className="w-4 h-4" />
               </div>
             </button>
@@ -154,11 +156,11 @@ const ActionsTD = ({ account, setSelectedAccount, setEditFormState, setRemoveMod
 
   return (
     <td className="p-4 text-center border-b border-blue-gray-50">
-      <div className="flex items-center justify-center space-x-3">
+      <div className="flex justify-center items-center space-x-3">
         <div className="relative group">
           <button disabled={selectedRows.length > 1} onClick={handleResetSignInAttempts}
             className={`px-2.5 py-2 hover:drop-shadow-md shadow-sm rounded outline outline-1 disabled:outline-black disabled:bg-gray-300`}>
-            <div className="flex items-center justify-center">
+            <div className="flex justify-center items-center">
               <MdKey className="w-4 h-4" />
             </div>
           </button>
@@ -167,7 +169,7 @@ const ActionsTD = ({ account, setSelectedAccount, setEditFormState, setRemoveMod
         <div className="relative group">
           <button disabled={selectedRows.length > 1} onClick={handleResetPassword}
             className={`px-2.5 py-2 hover:drop-shadow-md shadow-sm rounded outline outline-1 disabled:outline-black disabled:bg-gray-300`}>
-            <div className="flex items-center justify-center">
+            <div className="flex justify-center items-center">
               <MdLockReset className="w-4 h-4" />
             </div>
           </button>
@@ -184,7 +186,7 @@ const LoadingComponent = () => {
     <>
       <tr className="p-4 text-center border-b border-blue-gray-50">
         <td colSpan={8} className="p-6">
-          <span className="flex flex-col justify-center w-full space-x-4 text-center">
+          <span className="flex flex-col justify-center space-x-4 w-full text-center">
             <p className="p-2 text-gray-400">
               There's no data yet.
             </p>

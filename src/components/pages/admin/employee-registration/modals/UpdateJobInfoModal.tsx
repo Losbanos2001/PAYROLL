@@ -3,11 +3,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import { EmployeeContext } from '../../../../contexts';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useGetLocationData from '../../self-service/location/hooks/Location/useGetLocationData';
-import useGetDepartmentData from '../../self-service/location/hooks/Department/useGetDepatmentData';
-import useGetPositionData from '../../self-service/location/hooks/Position/useGetPositionData';
-import useGetEmploymentTypeData from '../../self-service/location/hooks/EmploymentType/useGetEmploymentTypeData';
-// import { fetchSchesuleData } from '@/components/pages/self-service/schedule/hooks/useScheduleQueries';
+import { useGetDummyLocationData, useGetDummyDepartmentData, useGetDummyPositionData, useGetDummyEmploymentTypeData, useGetDummyScheduleData } from '../hooks/useDummyData';
 import { initialJobProfileValues } from '../helpers/utils';
 import { useQueries } from '@tanstack/react-query';
 import useUpdateInfo from '../hooks/useUpdateInfo';
@@ -25,18 +21,18 @@ interface QueryData {
   [key: string]: any[];
 }
 
-export default function UpdateProfileModal({ isOpen, onClose }: ModalProps) {
+export default function UpdateJobInfoModal({ isOpen, onClose }: ModalProps) {
   const { selectedEmployee, setSelectedRows, setSelectedEmployee } = useContext(EmployeeContext)
   const { mutate } = useUpdateInfo()
   const queryClient = useQueryClient()
 
   const queries = useMemo(() => [
-    { queryKey: ['locationData'], queryFn: () => useGetLocationData(), enabled: isOpen },
-    { queryKey: ['departmentData'], queryFn: () => useGetDepartmentData(), enabled: isOpen },
-    { queryKey: ['positionsData'], queryFn: () => useGetPositionData(), enabled: isOpen },
-    { queryKey: ['employementTypesData'], queryFn: () => useGetEmploymentTypeData(), enabled: isOpen },
-    // { queryKey: ['schedulesData'], queryFn: () => fetchSchesuleData(), enabled: isOpen }
-  ], [isOpen, selectedEmployee]);
+    { queryKey: ['locationData'], queryFn: () => useGetDummyLocationData() },
+    { queryKey: ['departmentData'], queryFn: () => useGetDummyDepartmentData() },
+    { queryKey: ['positionsData'], queryFn: () => useGetDummyPositionData() },
+    { queryKey: ['employementTypesData'], queryFn: () => useGetDummyEmploymentTypeData() },
+    { queryKey: ['schedulesData'], queryFn: () => useGetDummyScheduleData() }
+  ], []);
 
   const query = useQueries({
     queries,
@@ -49,32 +45,15 @@ export default function UpdateProfileModal({ isOpen, onClose }: ModalProps) {
               ? (result.data as unknown as QueryData)[key].filter((item: any) => item[key] !== '[Empty]') 
               : [];
 
-            // Remove duplicates manually
-            const uniqueItems: any[] = [];
-            const seenValues: Set<any> = new Set();
-
-            items.forEach((item: any) => {
-              // Get the relevant value to check for duplicates
-              const value = key === 'schedule' ? item.schedule_code : item[key];
-              if (!seenValues.has(value)) {
-                seenValues.add(value);
-                uniqueItems.push(item);
-              }
-            });
-
             return {
-              [key]: uniqueItems
+              [key]: items
             };
           }
-        }).filter(Boolean), // Filter out any undefined results
+        }).filter(Boolean),
         pending: results.some((result) => result.isPending),
       };
     },
   });
-
-  // useEffect(() => {
-  //   console.log(query)
-  // }, [query])
 
   const jobInfoSchema = Yup.object().shape({
     id: Yup.number().optional(),
@@ -115,19 +94,18 @@ export default function UpdateProfileModal({ isOpen, onClose }: ModalProps) {
     setValue
   } = useForm<JobProfile>({
     resolver: yupResolver<JobProfile>(jobInfoSchema),
-    defaultValues: initialJobProfileValues,
+    defaultValues: selectedEmployee,
     mode: 'onChange'
   });
 
   useEffect(() => {
-    if (selectedEmployee.job_profile) {
-      const keys = Object.keys(initialJobProfileValues) as (keyof JobProfile)[]
+    if (selectedEmployee) {
+      const keys = Object.keys(initialJobProfileValues) as (keyof JobProfile)[];
       keys.forEach((key) => {
-        const value = selectedEmployee.job_profile[key];
-        setValue(key, value ?? '', { shouldValidate: true });
-      })
+        setValue(key, selectedEmployee[key] ?? '', { shouldValidate: true });
+      });
     }
-  }, [selectedEmployee.job_profile, setValue]);
+  }, [selectedEmployee, setValue]);
 
   const onSubmit = async (data: any) => {
     const filteredData = Object.fromEntries(

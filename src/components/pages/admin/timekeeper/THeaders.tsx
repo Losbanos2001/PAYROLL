@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { TimekeeperContext, AccountContext } from "../../../contexts";
+import { TimekeeperContext, AccountContext } from "@/components/contexts";
 import { HeaderTooltip } from '../timekeeper/Tooltip'
-import { TimekeeperAccount } from "../../../types";
+import { TimekeeperAccount } from "@/components/types";
 import { MdUnfoldMore } from "react-icons/md";
 
 type TableColumns = 'username' | 'email';
@@ -194,13 +194,13 @@ export default function THeaders({
             <option value="2">Reset Password</option>
             {accessType === '1to1' || (accessType === 'Hybrid' && step === 3) ? null : <option value="3">Delete</option>}
           </select>
-          <span className="absolute z-10 w-fit top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex">
+          <span className="absolute z-10 w-fit top-12 scale-0 rounded-lg bg-[#344960] p-4 text-xs text-white group-hover:scale-100 flex -left-[330px]">
             <p className="text-xs font-normal text-left">
               Click this drop-down button to{" "}
               <span className="italic underline">reset sign in attempts/</span> <span className="italic underline">reset password/</span> <span className="italic underline">delete</span> {" "}
               the selected employees.
             </p>
-            <div className="absolute w-3 h-3 bg-[#344960] transform rotate-45 -top-1"></div>
+            <div className="absolute w-3 h-3 bg-[#344960] transform rotate-45 -top-1 left-[400px]"></div>
           </span>
         </th>
       ) : (

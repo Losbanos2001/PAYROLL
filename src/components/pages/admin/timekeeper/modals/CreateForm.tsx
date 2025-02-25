@@ -9,6 +9,7 @@ import { useQueries, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState, useMemo, useContext } from "react";
 import toast from 'react-hot-toast';
 import CustomToast from '@/components/Toast/CustomToast';
+import { dummyLocations, dummyDepartments } from '../helpers/dummyData';
 
 interface ModalProps {
   isOpen: boolean;
@@ -50,6 +51,9 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
 
   const rateStatus = ["Hourly", "Daily", "Monthly", "Freelance/Contract", "Commission"];
 
+  // Flag to toggle between dummy data and API data
+  const useDummyData = true; // Set this to false when you want to use API data
+
   const { control, handleSubmit, reset, setValue, register, formState: { errors, isValid, isSubmitting } } = useForm<TimekeeperValues>({
     defaultValues: {
       username: "",
@@ -61,9 +65,9 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
   });
 
   const queries = useMemo(() => [
-    { queryKey: ['locationData'], queryFn: () => useGetLocationData(), enabled: isOpen },
-    { queryKey: ['departmentData'], queryFn: () => useGetDepartmentData(), enabled: isOpen },
-  ], [isOpen]);
+    { queryKey: ['locationData'], queryFn: () => useGetLocationData(), enabled: isOpen && !useDummyData },
+    { queryKey: ['departmentData'], queryFn: () => useGetDepartmentData(), enabled: isOpen && !useDummyData },
+  ], [isOpen, useDummyData]);
 
   const query = useQueries({
     queries,
@@ -104,11 +108,19 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
     });
     register("location", {
       required: "(Required)",
-      validate: value => value.length > 0 && value.every(v => query?.data[0]?.locations.includes(v))
+      validate: value => value.length > 0 && value.every(v => 
+        useDummyData 
+          ? dummyLocations.includes(v)
+          : query?.data[0]?.locations.includes(v)
+      )
     });
     register("department", {
       required: "(Required)",
-      validate: value => value.length > 0 && value.every(v => query?.data[1]?.departments.includes(v))
+      validate: value => value.length > 0 && value.every(v => 
+        useDummyData 
+          ? dummyDepartments.includes(v)
+          : query?.data[1]?.departments.includes(v)
+      )
     });
     register("rate_status", {
       required: "(Required)",
@@ -163,7 +175,7 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
               <div className="inline-block overflow-hidden text-left align-bottom bg-white rounded-lg shadow-xl transition-all transform sm:my-8 sm:align-middle w-fit sm:mx-6 md:mx-28">
                 <div className="text-center sm:text-left">
-                  {query.pending ? (
+                  {query.pending && !useDummyData ? (
                     <div className="p-10">Please wait...</div>
                   ) : (
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -246,7 +258,7 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
                                     initialSelected={field.value}
                                     setSelected={setSelected}
                                     selected={selected.location}
-                                    items={query?.data[0]?.locations}
+                                    items={useDummyData ? dummyLocations : query?.data[0]?.locations}
                                     itemType="location"
                                     setFieldValue={(name: string, value: string[]) => setValue(name as keyof TimekeeperValues, value)}
                                   />
@@ -257,8 +269,9 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    setValue('location', query?.data[0]?.locations);
-                                    setSelected(prev => ({ ...prev, location: query?.data[0]?.locations }));
+                                    const locations = useDummyData ? dummyLocations : query?.data[0]?.locations;
+                                    setValue('location', locations);
+                                    setSelected(prev => ({ ...prev, location: locations }));
                                   }}
                                   className="underline text-slate-400 hover:text-slate-800"
                                 >
@@ -300,7 +313,7 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
                                     initialSelected={field.value}
                                     setSelected={setSelected}
                                     selected={selected.department}
-                                    items={query?.data[1]?.departments}
+                                    items={useDummyData ? dummyDepartments : query?.data[1]?.departments}
                                     itemType="department"
                                     setFieldValue={(name: string, value: string[]) => setValue(name as keyof TimekeeperValues, value)}
                                   />
@@ -310,8 +323,9 @@ export default function CreateFormModal({ isOpen, onClose }: ModalProps) {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    setValue('department', query?.data[1]?.departments);
-                                    setSelected(prev => ({ ...prev, department: query?.data[1]?.departments }));
+                                    const departments = useDummyData ? dummyDepartments : query?.data[1]?.departments;
+                                    setValue('department', departments);
+                                    setSelected(prev => ({ ...prev, department: departments }));
                                   }}
                                   className="underline text-slate-400 hover:text-slate-800"
                                 >

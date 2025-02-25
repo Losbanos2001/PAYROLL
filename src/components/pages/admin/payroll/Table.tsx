@@ -22,14 +22,14 @@ export function Table() {
 		<>
 			<EditForm isOpen={editModalState} onClose={handleUpdateClose} />
 			<DeleteModal isOpen={removeModalState} onClose={handleRemoveClose} />
-			<div className='w-full max-w-5xl px-8 py-6 mt-6 bg-white rounded outline outline-1 outline-slate-300 space-y-7'>
+			<div className='px-8 py-6 mt-6 space-y-7 w-full max-w-5xl bg-white rounded outline outline-1 outline-slate-300'>
 				<div className="flex justify-end">
 					<CreateBtn />
 				</div>
-				<div className="overflow-y-auto max-h-96">
+				<div className="overflow-y-auto max-h-56">
 					<table className="w-full table-auto">
-						<thead className="sticky top-0 z-10 text-sm border-b-2">
-							<tr className="bg-[#F9F9F9]">
+					    <thead className="sticky top-0 z-10 text-sm whitespace-nowrap">
+					        <tr className="bg-white border-b-2">
 								<THeaders setRemoveModalState={setRemoveModalState} />
 							</tr>
 						</thead>

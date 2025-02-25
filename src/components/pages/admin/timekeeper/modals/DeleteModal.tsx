@@ -71,17 +71,19 @@ export default function DeleteModal({ isOpen, onClose }: DeleteModalProps) {
     return text;
   }
 
+  if (!selectedAccount) return null;
+
   return (
     <>
       {isOpen && (
-        <div className="absolute z-50 block">
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen px-4 pt-2 pb-20 text-center sm:block sm:p-0">
+        <div className="block absolute z-50">
+          <div className="overflow-y-auto fixed inset-0">
+            <div className="flex justify-center items-center px-4 pt-2 pb-20 min-h-screen text-center sm:block sm:p-0">
               <div className="fixed inset-0 transition-opacity">
                 <div className="absolute inset-0 bg-[#5982ff] opacity-40 mix-blend-lighten"></div>
               </div>
               <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
-              <div className="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:pb-6">
+              <div className="inline-block overflow-hidden text-left align-bottom bg-white rounded-lg shadow-xl transition-all transform sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:pb-6">
                 <div className="text-center border-b-2 sm:text-left">
                   <div className="flex justify-center my-4 text-red-500 sm:p-6">
                     <svg
@@ -100,16 +102,16 @@ export default function DeleteModal({ isOpen, onClose }: DeleteModalProps) {
                     {modalText()}
                   </h1>
                 </div>
-                <div className="justify-around w-full px-10 py-4 sm:mt-4 sm:flex sm:flex-row-reverse">
+                <div className="justify-around px-10 py-4 w-full sm:mt-4 sm:flex sm:flex-row-reverse">
                   <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
                     <button onClick={handleConfirm} type="button"
-                      className="justify-center w-full px-12 py-4 text-base font-bold leading-6 text-white transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md shadow-sm drop-shadow-xl hover:bg-gray-500 focus:outline-none focus:shadow-outline-green sm:text-sm sm:leading-5">
+                      className="justify-center px-12 py-4 w-full text-base font-bold leading-6 text-white bg-blue-600 rounded-md border border-transparent shadow-sm drop-shadow-xl transition duration-150 ease-in-out hover:bg-gray-500 focus:outline-none focus:shadow-outline-green sm:text-sm sm:leading-5">
                       Yes
                     </button>
                   </span>
-                  <span className="flex w-full mt-3 rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                  <span className="flex mt-3 w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
                     <button type="button"
-                      className="justify-center w-full px-12 py-4 text-base font-bold leading-6 text-gray-700 transition duration-150 ease-in-out bg-white border border-blue-600 rounded-md shadow-sm drop-shadow-xl hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue sm:text-sm sm:leading-5"
+                      className="justify-center px-12 py-4 w-full text-base font-bold leading-6 text-gray-700 bg-white rounded-md border border-blue-600 shadow-sm drop-shadow-xl transition duration-150 ease-in-out hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue sm:text-sm sm:leading-5"
                       onClick={() => { onClose(); setSelectedRows([]); }}>
                       No
                     </button>

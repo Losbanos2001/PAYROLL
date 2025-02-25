@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EmployeeRegistrationContext } from "../../../contexts";
+import { EmployeeRegistrationContext } from "@/components/contexts";
 
 export default function EmployeeRegistrationWrapper({ children, }: { children: React.ReactNode; }) {
   const [step, setStep] = useState(1);

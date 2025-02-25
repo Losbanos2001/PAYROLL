@@ -18,17 +18,17 @@ export default function Content() {
           <Header />
           <EmployeeWrapper>
             <div 
-              className="flex flex-col items-center justify-center bg-fixed bg-center bg-no-repeat bg-cover bg-origin-content" 
+              className="flex flex-col justify-center items-center bg-fixed bg-origin-content bg-center bg-no-repeat bg-cover" 
               style={{ 
                 height: '75vh', 
                 backgroundImage: `url(${optimizedBgUrl})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}>
-              <div className="w-full max-w-5xl px-8 py-3">
+              <div className="px-8 py-6 w-full max-w-5xl">
                 <DownloadUpload />
               </div>
-              <div className="w-full max-w-5xl px-8 py-6 mt-4 bg-white rounded outline outline-1 outline-slate-300 space-y-7">
+              <div className="px-8 py-6 space-y-4 w-full max-w-5xl bg-white rounded outline outline-1 outline-slate-300">
                 <div className="flex justify-between">
                   <SearchBar />
                   <CreateBtn />

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Control } from 'react-hook-form';
 import { regionsPH } from '../../helpers/constants';
-import { Employee } from '../../../../../types';
+import { Employee } from '@/components/types';
 
 interface ContactInfoProps {
   control: Control<Employee>; 
@@ -58,7 +58,6 @@ const ContactInfo: FC<ContactInfoProps> = ({ control, errors }) => (
     <div>
       <label htmlFor="zip_code" className="label-modal">Zip Code</label>
       <input
-         defaultValue={9000}
          className="input-text-modal"
         {...control.register('zip_code', { required: 'Zip Code is required*' })}
       />

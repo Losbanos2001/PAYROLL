@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
-import { EmployeeRegistrationContext, ProgressIndicatorContext } from "../../../contexts";
+import { EmployeeRegistrationContext, ProgressIndicatorContext } from "@/components/contexts";
 import JobInfoIntroModal from "./modals/JobInfoIntroModal";
 import ConfirmProceedModal from "./modals/ConfirmProceedModal";
-import SkipProcessModal from "../../../modal/SkipModal";
+import SkipProcessModal from "@/components/modal/SkipModal";
 
 export default function Footer() {
   const [skipModalState, setSkipModalState] = useState(false);
